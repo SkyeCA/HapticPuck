@@ -12,6 +12,7 @@ ESP8266 specific firmware.
 ### Naming
 
 <ins>AP Name:</ins> NHD-HapticPuck-[serial], ex: `NHD-HapticPuck-0001`
+
 <ins>Hostname:</ins> nhd-hapticpuck-[serial], ex: `nhd-hapticpuck-0001`
 
 ### Services Provided
