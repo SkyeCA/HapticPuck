@@ -1,4 +1,3 @@
-const { Server } = require("node-osc");
 const find = require('local-devices');
 const axios = require('axios')
 
@@ -7,11 +6,6 @@ const DISCOVERY_REQ_TIMEOUT = 1000;
 const DISCOVERY_CON_TIMEOUT = 2000;
 const DISCOVERY_ENDPOINT = "/cat";
 const DISCOVERY_RESPONSE = "Meow >_<"
-///avatar/parameters/VFH/Zone/Touch/Headpats/Self
-const AVATAR_PARAM = "/avatar/parameters/VFH/Zone/Touch/Headpats"
-const SCALAR = 100
-const MIN_LEVEL = 0
-const TOUCH_SELF = false;
 
 const VIBRATE_ENDPOINT = (level) => `/vibrate?val=${level}`;
 const LOG = (loggable) => { if(DEBUG) console.log(`${Date.now()}: ${loggable}`) }
