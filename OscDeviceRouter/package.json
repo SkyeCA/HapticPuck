@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
-    "local-devices": "^4.0.0"
+    "local-devices": "^4.0.0",
+    "node-osc": "^9.1.4"
   }
 }
