@@ -34,6 +34,7 @@ If you build this device or use any component of this project you agree that I w
 - (1) TP4056 Li-ion battery charger board
 - (1) 3.7V Li-ion battery
   - I used a CS-PM150SL, but you can use *any* flat battery that fits!
+- Gorilla Tough & Clear Mounting Tape and/or hot glue.
 
 
 **Non-parts:**
@@ -44,27 +45,21 @@ If you build this device or use any component of this project you agree that I w
 
 ## Components
 
-### ./Case
+### Case/
 
 This folder contains all the 3D models used for the HapticPuck. These were created in SketchUp 2017 and I have provided both .DAE exports of the models and Gcode files for 3d printing.
 
 The Gcode files were generated for my printer, the Elegoo Neptune 3 Pro and I can not guarantee they'll print fine on other 3D printers.
 
-### ./Firmware
+### Firmware/
 
 This folder contains different versions of the firmware for the microcontroller(s) that can run this project.
 
-#### ./Firmware/HapticPuck_ESP8266_FW
-
-ESP8266 specific firmware, tested on the NodeMCU 0.9.
-
-<ins>Default Serial Debug Settings:</ins> 9600/8/N/1
-
-### ./OscDeviceRouter
+### OscDeviceRouter/
 
 A custom OSC router primarily intended for getting OSC commands from VRChat and forwarding them to the HapticPuck in a format that the firmware can understand.
 
-### ./Resources
+### Resources/
 
 Random repo specific resources like the image at the top of this readme.
 
