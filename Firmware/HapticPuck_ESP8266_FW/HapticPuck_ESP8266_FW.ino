@@ -1,9 +1,10 @@
-#include <WiFiManager.h>
-#include <ESP8266WebServer.h>
-#include "mdns.h"
+#include <WiFiManager.h> // 2.0.17
+#include <ESP8266WebServer.h> 
+#include <ESP8266mDNS.h>
 
+#define NETWORK_PORT 7593
 #define VIBRATOR_PIN D5
-#define VERSION "0.1"
+#define VERSION "0.2"
 #define MIN_VIBRATE 75
 #define STEP_VAL 7.5
 
@@ -12,12 +13,12 @@ std::unique_ptr<ESP8266WebServer> server;
 
 void handleRoot() {
   Serial.println("Root Handler Invoked");
-  server->send(200, "text/plain", "hello from esp8266!");
+  server->send(200, "text/plain", "Ok");
 }
 
 void handleNotFound(){
   Serial.println("Not Found Handler Invoked");
-  server->send(404, "text/plain", "404: Not found");
+  server->send(404, "text/plain", "404");
 }
 
 void handleVibrate() {
@@ -25,20 +26,20 @@ void handleVibrate() {
 
   if(!server->hasArg("val")){
     Serial.println("No val provided.");
-    server->send(500, "text/plain", "No Vibrate Val Provided. [0..100]");
+    server->send(500, "text/plain", "No Vibrate Val Provided. [0..20]");
     return;
   }
 
   int vibrateValue = server->arg("val").toInt();
 
   if(vibrateValue < 0 || vibrateValue > 20){
-    Serial.println("Invalid val range.");
+    Serial.println("Invalid val range");
     server->send(400, "text/plain", "Only range 0..20 is valid");
     return;
   } else if(vibrateValue == 0){
-    Serial.println("Turned off.");
-    server->send(200, "text/plain", "Ok");
+    Serial.println("Turned off");
     analogWrite(VIBRATOR_PIN, 0);
+    server->send(200, "text/plain", "Ok");
     return;
   }
 
@@ -66,12 +67,12 @@ void handleVersion() {
 
 void handleCopyright() {
   Serial.println("Copyright Handler Invoked");
-  server->send(200, "text/plain", "(C) 2025 Connor Oliver/SkyeCA (connor@muezza.ca), http://muezza.ca");
+  server->send(200, "text/plain", "(C) 2025 SkyeCA - https://github.com/SkyeCA");
 }
 
 void handleCat() {
   Serial.println("Cat Handler Invoked");
-  server->send(200, "text/plain", "Meow >_<");
+  server->send(200, "text/plain", "Meow (=･ω･=)");
 }
 
 void setup() {
@@ -79,22 +80,26 @@ void setup() {
 
   Serial.println("Init");
 
-  //digitalWrite(VIBRATOR_PIN, HIGH);
-
   // Configure Wifi to work with Bell GigaHub
   WiFi.persistent(false);
   WiFi.setPhyMode(WIFI_PHY_MODE_11G);
-  WiFi.hostname("MZA-HapticPuck-001");
+  WiFi.hostname("nhd-hapticpuck-0001");
   //WiFi.mode(WIFI_STA); 
 
   // Start WifiManager AP
   Serial.println("WM Start");
   //wifiManager.setDebugOutput(false);
-  wifiManager.autoConnect("MZA_HapticPuck");
+  wifiManager.autoConnect("NHD-HapticPuck-0001");
+
+  // Start mdns
+  Serial.println("mDNS Start");
+  if (!MDNS.begin("nhd-hapticpuck-0001")) {
+    Serial.println("Error setting up MDNS responder!");
+    while (1) { delay(1000); }
+  }
   
   Serial.println("Server Start");
-  server.reset(new ESP8266WebServer(WiFi.localIP(), 80));
-
+  server.reset(new ESP8266WebServer(WiFi.localIP(), NETWORK_PORT));
   server->on("/", handleRoot);
   server->on("/battery", handleBattery);
   server->on("/reset", handleReset);
@@ -104,9 +109,15 @@ void setup() {
   server->on("/cat", handleCat);
   server->onNotFound(handleNotFound);
   server->begin();
+
+  // Add mDNS Service
+  Serial.println("Add mDNS Service");
+  MDNS.addService("nhd", "tcp", NETWORK_PORT);
+
   Serial.println("Ready!");
 }
 
 void loop() {
   server->handleClient();
+  MDNS.update();
 }
