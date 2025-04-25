@@ -6,13 +6,15 @@ This repo contains all the code, models, and other resources needed to create a 
 
 The primary use case for this project is as a Haptic feedback device for VRChat (and a custom OSC router is included), but if you know how to code, or have basic knowledge of OSC than it could be used for a wide range of applications.
 
+__Warning: This is a work in progress. You should consider this project to be prototype quality currently!__
+
 ## Disclaimer
 
 I am just some random hobbyist on the internet who is sharing their personal project. This device has not been formally tested and I am not trained in electronic design/theory.
 
 **Everything in this repo is to be used AT YOUR OWN RISK.**
 
-If you build this device or use any component of this project you agree that I will not be held personally responsible for any harm that comes to you or others as a result of it.
+If you build this device or use any component of this project you agree that I will not be held personally responsible for any harm that comes to you and/or others as a result of it.
 
 ## Supported Hardware
 
@@ -23,10 +25,12 @@ If you build this device or use any component of this project you agree that I w
 ## Build Requirements
 
 **Parts:**
-- (1) ESP8266
+- (1) ESP8266 (Without soldered headers!)
 - (1) 1k resistor
 - (1) 56ohm resistor
-- (1) 200UF 16v capacitor
+- (1) Red LED
+  - I used the very uncommon AL102BM but you don't have too! I am going to update the 3D files soon to use a standard sized LED.
+- (1) 200uF 16v capacitor
 - (1) 2n2222 transistor
 - (4) 10x3mm 3V DC "Coin style" vibration motors
 - (1) AMS1117 board
@@ -43,7 +47,7 @@ If you build this device or use any component of this project you agree that I w
 - The ability and tools to solder.
 - Patience
 
-## Components
+## Repo Layout
 
 ### Case/
 
