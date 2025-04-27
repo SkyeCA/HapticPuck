@@ -1,8 +1,8 @@
-package ca.nhd.devices.commandStandards;
+package ca.nhd.comm.inf;
 
 import ca.nhd.comm.exceptions.CommError;
 
-public interface DeviceCommandsV1 {
+public interface IDeviceCommandsV1 {
     boolean vibrate(int step) throws CommError;
     int battery() throws CommError;
     boolean reset() throws CommError;

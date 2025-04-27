@@ -1,11 +1,11 @@
-package ca.nhd.comm;
+package ca.nhd.comm.nhd;
 
 import ca.nhd.comm.exceptions.CommError;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class NhdHttpClient {
+public class SimpleHttpClient {
     private final OkHttpClient client = new OkHttpClient();
 
     public String httpGet(String url) {
@@ -18,7 +18,7 @@ public class NhdHttpClient {
                 return response.body() != null ? response.body().string() : "null";
             }
         } catch (Exception e) {
-            throw new CommError("Error occured when communicating with device.", e);
+            throw new CommError("Error occurred when communicating with device.", e);
         }
     }
 }
