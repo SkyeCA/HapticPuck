@@ -1,13 +1,11 @@
-package ca.nhd;
+package ca.nhd.osc;
 
-import com.illposed.osc.OSCMessageEvent;
 import com.illposed.osc.OSCMessageListener;
 import com.illposed.osc.messageselector.JavaRegexAddressMessageSelector;
 import com.illposed.osc.messageselector.OSCPatternAddressMessageSelector;
 import com.illposed.osc.transport.OSCPortIn;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 public class OSCController {
     private static final JavaRegexAddressMessageSelector GLOBAL_LISTENER_PATTERN = new JavaRegexAddressMessageSelector(".*");
