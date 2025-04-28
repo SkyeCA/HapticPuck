@@ -16,6 +16,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemFileScanDevices"
 						"text": "Scan For Devices"
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "menuItemFileScanDevicesMouseClicked", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemFileLogs"
