@@ -31,7 +31,11 @@ public class HapticPuck implements IDevice {
         Date now = new Date();
         int newStep;
 
-        if(this.messageQueue.getMessageCount() == 0  || (now.getTime() - messageQueue.getLastMessageDate().getTime()) / 1000 > 400){
+        if((now.getTime() - messageQueue.getLastMessageDate().getTime()) / 1000 < 400){
+            return;
+        }
+
+        if(this.messageQueue.getMessageCount() == 0 || this.messageQueue.getMessageCount() < 10){
             newStep = 0;
         } else {
             float sum = 0;
