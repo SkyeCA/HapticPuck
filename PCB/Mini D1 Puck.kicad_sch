@@ -1239,28 +1239,22 @@
 		(uuid "018c04b2-6b31-40ca-8554-21d68df04f17")
 	)
 	(junction
-		(at 124.46 48.26)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1aec9509-aa94-4cb0-a397-6d15cc2c3a9c")
-	)
-	(junction
-		(at 124.46 60.96)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1d861cbf-e3b8-4dca-b9e8-e2d2c4bcb8bc")
-	)
-	(junction
 		(at 88.9 58.42)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "29392543-a6be-4a1b-8766-ebd80431fd64")
 	)
 	(junction
-		(at 99.06 48.26)
+		(at 125.73 60.96)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "57703e5d-1540-4e27-b4d1-ac8b2add918f")
+		(uuid "398914a5-a6ae-47db-bf74-b8c0856812f7")
+	)
+	(junction
+		(at 114.3 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "58e80bc2-c728-4832-a8a9-dd2e954a1201")
 	)
 	(junction
 		(at 88.9 50.8)
@@ -1269,16 +1263,22 @@
 		(uuid "67303f74-2850-48b8-b541-84e26da3a731")
 	)
 	(junction
-		(at 111.76 60.96)
+		(at 102.87 60.96)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "85c81b50-e36c-4f0e-8e4c-b67e09233458")
+		(uuid "7812b2ba-87ed-4993-9ad3-6353581edbe4")
 	)
 	(junction
-		(at 99.06 60.96)
+		(at 102.87 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "85d73032-4584-4605-b036-f6754b14a27e")
+		(uuid "ac355e91-7922-4414-a942-ce5f4fe88d6a")
+	)
+	(junction
+		(at 125.73 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b6586585-9624-40cb-ab64-7b4afdae3686")
 	)
 	(junction
 		(at 72.39 85.09)
@@ -1287,16 +1287,26 @@
 		(uuid "b8be757f-13a5-4027-811c-5f1bb4fddc48")
 	)
 	(junction
-		(at 111.76 48.26)
+		(at 114.3 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "ccf8e672-89d5-4d48-ba2a-193e2a57d433")
+		(uuid "bb218437-1204-4a3b-ae88-50cf92deabc2")
 	)
 	(junction
 		(at 72.39 63.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cffc5737-8e8f-4704-8f2d-769849ffc1ac")
+	)
+	(wire
+		(pts
+			(xy 102.87 60.96) (xy 114.3 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "013638da-554b-45d7-9532-e7a8a199f2ec")
 	)
 	(wire
 		(pts
@@ -1320,6 +1330,16 @@
 	)
 	(wire
 		(pts
+			(xy 125.73 48.26) (xy 137.16 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09ef1887-0245-44da-8cbe-afefb94a791a")
+	)
+	(wire
+		(pts
 			(xy 72.39 81.28) (xy 72.39 85.09)
 		)
 		(stroke
@@ -1327,16 +1347,6 @@
 			(type default)
 		)
 		(uuid "10c57d27-e4ce-42a8-a894-f2ffac6b84bb")
-	)
-	(wire
-		(pts
-			(xy 111.76 60.96) (xy 124.46 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24172105-ea59-4680-818d-dbd5d4c8104e")
 	)
 	(wire
 		(pts
@@ -1360,13 +1370,13 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 48.26) (xy 111.76 48.26)
+			(xy 114.3 48.26) (xy 125.73 48.26)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "2e2a1515-668e-41ec-9060-85486e5d7f5f")
+		(uuid "30cbdd7a-317e-4dfe-a4e5-e0eacdbe92ed")
 	)
 	(wire
 		(pts
@@ -1420,16 +1430,6 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 48.26) (xy 124.46 48.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "52e2162b-93c3-4bcd-8844-42cc4ff53e03")
-	)
-	(wire
-		(pts
 			(xy 54.61 110.49) (xy 49.53 110.49)
 		)
 		(stroke
@@ -1437,16 +1437,6 @@
 			(type default)
 		)
 		(uuid "57d48bc9-a61a-4686-b846-4192e2c8e520")
-	)
-	(wire
-		(pts
-			(xy 124.46 60.96) (xy 137.16 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58cf51fd-3474-4f37-87f9-8efedb93b411")
 	)
 	(wire
 		(pts
@@ -1460,7 +1450,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 60.96) (xy 99.06 60.96)
+			(xy 95.25 60.96) (xy 102.87 60.96)
 		)
 		(stroke
 			(width 0)
@@ -1480,6 +1470,16 @@
 	)
 	(wire
 		(pts
+			(xy 102.87 48.26) (xy 114.3 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "77bdbcda-4d86-4da6-b43a-481feae9a67a")
+	)
+	(wire
+		(pts
 			(xy 26.67 39.37) (xy 26.67 41.91)
 		)
 		(stroke
@@ -1487,6 +1487,16 @@
 			(type default)
 		)
 		(uuid "7ab15621-97d6-4aa6-9269-500b370a5444")
+	)
+	(wire
+		(pts
+			(xy 125.73 60.96) (xy 137.16 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83003161-0359-40dc-b26e-c8445ecd4634")
 	)
 	(wire
 		(pts
@@ -1537,6 +1547,16 @@
 			(type default)
 		)
 		(uuid "a3ea93a5-c345-46d2-b542-add30e331378")
+	)
+	(wire
+		(pts
+			(xy 114.3 60.96) (xy 125.73 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a464f0be-6f15-416a-8d5a-1268cc44a4d0")
 	)
 	(wire
 		(pts
@@ -1600,16 +1620,6 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 48.26) (xy 137.16 48.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c081900e-504d-41b4-8630-99820c7a5d93")
-	)
-	(wire
-		(pts
 			(xy 72.39 45.72) (xy 72.39 48.26)
 		)
 		(stroke
@@ -1627,16 +1637,6 @@
 			(type default)
 		)
 		(uuid "caac91b3-e6c7-4865-8ffb-db8a2230e25a")
-	)
-	(wire
-		(pts
-			(xy 99.06 60.96) (xy 111.76 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cb82c997-da5f-4c97-b178-9d11dd5ceb8c")
 	)
 	(wire
 		(pts
@@ -1760,7 +1760,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 48.26) (xy 99.06 48.26)
+			(xy 95.25 48.26) (xy 102.87 48.26)
 		)
 		(stroke
 			(width 0)
@@ -2574,7 +2574,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
+		(property "Value" "200uF"
 			(at 92.71 55.8799 0)
 			(effects
 				(font
@@ -2627,7 +2627,7 @@
 	)
 	(symbol
 		(lib_id "Motor:Motor_DC")
-		(at 111.76 53.34 0)
+		(at 114.3 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2636,7 +2636,7 @@
 		(fields_autoplaced yes)
 		(uuid "48a09ca2-002f-47a3-bdb2-b5ad7fa3505f")
 		(property "Reference" "M2"
-			(at 116.84 54.6099 0)
+			(at 119.38 54.6099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2645,7 +2645,7 @@
 			)
 		)
 		(property "Value" "VI2"
-			(at 116.84 57.1499 0)
+			(at 119.38 57.1499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2654,7 +2654,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 111.76 55.626 0)
+			(at 114.3 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2663,7 +2663,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 111.76 55.626 0)
+			(at 114.3 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2672,7 +2672,7 @@
 			)
 		)
 		(property "Description" "DC Motor"
-			(at 111.76 53.34 0)
+			(at 114.3 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2768,7 +2768,7 @@
 	)
 	(symbol
 		(lib_id "Motor:Motor_DC")
-		(at 124.46 53.34 0)
+		(at 125.73 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2777,7 +2777,7 @@
 		(fields_autoplaced yes)
 		(uuid "63d89849-068b-46e8-85ee-59f8dc8542f7")
 		(property "Reference" "M3"
-			(at 129.54 54.6099 0)
+			(at 130.81 54.6099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2786,7 +2786,7 @@
 			)
 		)
 		(property "Value" "VI3"
-			(at 129.54 57.1499 0)
+			(at 130.81 57.1499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2795,7 +2795,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 124.46 55.626 0)
+			(at 125.73 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2804,7 +2804,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 124.46 55.626 0)
+			(at 125.73 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2813,7 +2813,7 @@
 			)
 		)
 		(property "Description" "DC Motor"
-			(at 124.46 53.34 0)
+			(at 125.73 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3048,7 +3048,7 @@
 	)
 	(symbol
 		(lib_id "Motor:Motor_DC")
-		(at 99.06 53.34 0)
+		(at 102.87 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3057,7 +3057,7 @@
 		(fields_autoplaced yes)
 		(uuid "98edac5b-8df3-4eeb-a94e-1bc28ba7371a")
 		(property "Reference" "M1"
-			(at 104.14 54.6099 0)
+			(at 107.95 54.6099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3066,7 +3066,7 @@
 			)
 		)
 		(property "Value" "VI1"
-			(at 104.14 57.1499 0)
+			(at 107.95 57.1499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3075,7 +3075,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 99.06 55.626 0)
+			(at 102.87 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3084,7 +3084,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 99.06 55.626 0)
+			(at 102.87 55.626 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3093,7 +3093,7 @@
 			)
 		)
 		(property "Description" "DC Motor"
-			(at 99.06 53.34 0)
+			(at 102.87 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
