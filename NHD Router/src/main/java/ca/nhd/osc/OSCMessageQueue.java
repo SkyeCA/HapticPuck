@@ -7,7 +7,7 @@ import java.util.List;
 public class OSCMessageQueue<T> {
     private final String queueName;
     private List<T> messages = new ArrayList<>();
-    private Date lastMessage;
+    private Date lastMessage = new Date();
 
     public OSCMessageQueue(String queueName){
         this.queueName = queueName;
@@ -20,6 +20,14 @@ public class OSCMessageQueue<T> {
 
     public List<T> getMessages(){
         return this.messages;
+    }
+
+    public int getMessageCount(){
+        return this.messages.size();
+    }
+
+    public Date getLastMessageDate(){
+        return this.lastMessage;
     }
 
     public void clear(){
