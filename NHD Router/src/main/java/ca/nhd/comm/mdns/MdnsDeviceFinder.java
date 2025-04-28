@@ -16,6 +16,7 @@ public class MdnsDeviceFinder {
     }
 
     public List<MdnsDevice> find() {
+        System.out.println("Looking for devices via MDNS.");
         List<MdnsDevice> devices = new ArrayList<>();
         ServiceInfo[] networkDevices = mdns.list("_nhd._tcp.local.");
 
@@ -29,6 +30,7 @@ public class MdnsDeviceFinder {
             );
         }
 
+        System.out.println("Found " + devices.size() + " haptic device(s) via MDNS.");
         return devices;
     }
 }

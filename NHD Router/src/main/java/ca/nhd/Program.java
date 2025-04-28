@@ -21,7 +21,6 @@ public class Program {
         List<IDevice> devices = new ArrayList<>();
         OSCMessageQueue<Float> headpatMessageQueue = new OSCMessageQueue<>("headpatQueue");
 
-        System.out.println("Found " + availableDevices.size() + "devices");
         for(MdnsDevice availableDevice:availableDevices){
             if(availableDevice.getApplication().equals("nhd")) {
                 NhdHapticDeviceClient nhdHapticDeviceClient = new NhdHapticDeviceClient(availableDevice.getIpAddress(), availableDevice.getPort());
