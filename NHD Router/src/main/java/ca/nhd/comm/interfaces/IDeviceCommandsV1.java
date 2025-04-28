@@ -1,6 +1,7 @@
-package ca.nhd.comm.inf;
+package ca.nhd.comm.interfaces;
 
 import ca.nhd.comm.exceptions.CommError;
+import ca.nhd.comm.models.DeviceCompatibility;
 
 public interface IDeviceCommandsV1 {
     boolean vibrate(int step) throws CommError;
@@ -9,4 +10,5 @@ public interface IDeviceCommandsV1 {
     String version() throws CommError;
     String copyright() throws CommError;
     String cat() throws CommError;
+    DeviceCompatibility compatibility() throws CommError;
 }

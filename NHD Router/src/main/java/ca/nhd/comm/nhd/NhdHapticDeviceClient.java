@@ -1,7 +1,8 @@
 package ca.nhd.comm.nhd;
 
 import ca.nhd.comm.exceptions.CommError;
-import ca.nhd.comm.inf.IDeviceCommandsV1;
+import ca.nhd.comm.interfaces.IDeviceCommandsV1;
+import ca.nhd.comm.models.DeviceCompatibility;
 
 public class NhdHapticDeviceClient implements IDeviceCommandsV1 {
     private final SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
@@ -48,5 +49,11 @@ public class NhdHapticDeviceClient implements IDeviceCommandsV1 {
 
     public String cat() throws CommError {
         return simpleHttpClient.httpGet(this.baseUrl + "cat");
+    }
+
+    public DeviceCompatibility compatibility() throws CommError {
+        String response = simpleHttpClient.httpGet(this.baseUrl + "compatibility");
+        String[] responseParts = response.split("/");
+        return new DeviceCompatibility(responseParts[0], responseParts[1]);
     }
 }

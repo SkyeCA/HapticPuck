@@ -46,5 +46,15 @@
             <artifactId>okhttp</artifactId>
             <version>4.12.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.mdns</groupId>
+            <artifactId>quarkus-mdns</artifactId>
+            <version>1.1.0</version>
+        </dependency>
     </dependencies>
 </project>

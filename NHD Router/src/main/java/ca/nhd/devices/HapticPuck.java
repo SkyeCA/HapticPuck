@@ -1,6 +1,7 @@
 package ca.nhd.devices;
 
 import ca.nhd.comm.nhd.NhdHapticDeviceClient;
+import ca.nhd.devices.interfaces.IDevice;
 import ca.nhd.osc.OSCMessageQueue;
 
 import java.util.Date;
@@ -41,6 +42,7 @@ public class HapticPuck implements IDevice {
         }
 
         if(newStep != this.currentStep){
+            System.out.println("Set step:" + newStep);
             this.nhdHapticDeviceClient.vibrate(newStep);
             this.currentStep = newStep;
         }
