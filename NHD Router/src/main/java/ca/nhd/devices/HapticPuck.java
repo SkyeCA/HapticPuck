@@ -3,6 +3,8 @@ package ca.nhd.devices;
 import ca.nhd.comm.nhd.NhdHapticDeviceClient;
 import ca.nhd.devices.interfaces.IDevice;
 import ca.nhd.osc.OSCMessageQueue;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -11,20 +13,21 @@ public class HapticPuck implements IDevice {
     private final int SCALAR = 100;
     @SuppressWarnings("FieldCanBeLocal")
     private final int MIN_LEVEL = 0;
-    private final OSCMessageQueue<Float> messageQueue;
     private final NhdHapticDeviceClient nhdHapticDeviceClient;
-    private int currentStep = 0;
+    @Setter
+    @Getter
+    private OSCMessageQueue<Float> messageQueue = new OSCMessageQueue<>();
+    @Getter
     private String deviceName = "Unnamed Device";
+    private int currentStep = 0;
 
-    public HapticPuck(String deviceName, NhdHapticDeviceClient nhdHapticDeviceClient, OSCMessageQueue<Float> messageQueue){
+    public HapticPuck(String deviceName, NhdHapticDeviceClient nhdHapticDeviceClient){
         this.deviceName = deviceName;
         this.nhdHapticDeviceClient = nhdHapticDeviceClient;
-        this.messageQueue = messageQueue;
     }
 
-    public HapticPuck(NhdHapticDeviceClient nhdHapticDeviceClient, OSCMessageQueue<Float> messageQueue){
+    public HapticPuck(NhdHapticDeviceClient nhdHapticDeviceClient){
         this.nhdHapticDeviceClient = nhdHapticDeviceClient;
-        this.messageQueue = messageQueue;
     }
 
     public void loop(){
@@ -52,5 +55,20 @@ public class HapticPuck implements IDevice {
         }
 
         this.messageQueue.clear();
+    }
+
+    @Override
+    public String getName() {
+        return this.deviceName;
+    }
+
+    @Override
+    public String getIp() {
+        return this.nhdHapticDeviceClient.getIp();
+    }
+
+    @Override
+    public int getPort() {
+        return this.nhdHapticDeviceClient.getPort();
     }
 }

@@ -3,10 +3,13 @@ package ca.nhd.comm.nhd;
 import ca.nhd.comm.exceptions.CommError;
 import ca.nhd.comm.interfaces.IDeviceCommandsV1;
 import ca.nhd.comm.models.DeviceCompatibility;
+import lombok.Getter;
 
 public class NhdHapticDeviceClient implements IDeviceCommandsV1 {
     private final SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
+    @Getter
     private int port = 7593;
+    @Getter
     private final String ip;
     private final String baseUrl;
 

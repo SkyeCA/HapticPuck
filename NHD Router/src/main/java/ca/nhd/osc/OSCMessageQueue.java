@@ -5,13 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 public class OSCMessageQueue<T> {
-    private final String queueName;
     private List<T> messages = new ArrayList<>();
     private Date lastMessage = new Date();
-
-    public OSCMessageQueue(String queueName){
-        this.queueName = queueName;
-    }
 
     public void addMessage(T messageValue){
         this.messages.add(messageValue);

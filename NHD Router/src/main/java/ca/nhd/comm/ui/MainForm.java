@@ -1,5 +1,8 @@
 package ca.nhd.comm.ui;
 
+import ca.nhd.ApplicationStateManager;
+import ca.nhd.devices.interfaces.IDevice;
+
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -16,15 +19,24 @@ import javax.swing.table.*;
  * @author connoroliver
  */
 public class MainForm extends JPanel {
-	public MainForm() {
+	private final ApplicationStateManager asm;
+
+	public MainForm(ApplicationStateManager asm) {
+		this.asm = asm;
 		initComponents();
 	}
 
 	private void menuItemFileScanDevicesMousePressed(MouseEvent e) {
-		System.out.println("test");
-		((DefaultTableModel) deviceTable.getModel()).insertRow(0, new Object[] {
-				"Name", "IP", false, "OSC Listener", new Date()
-		});
+		this.asm.findNetworkDevices();
+
+		for(IDevice device : this.asm.getDevices()){
+			((DefaultTableModel) deviceTable.getModel()).addRow(new Object[] {
+					device.getName(), device.getIp(), false, "OSC Listener", new Date()
+			});
+		}
+
+
+
 	}
 
 	private void initComponents() {

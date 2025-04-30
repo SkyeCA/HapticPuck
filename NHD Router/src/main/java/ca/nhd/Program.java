@@ -14,32 +14,14 @@ import java.util.List;
 
 public class Program {
     public static void main(String... args) throws Exception {
-        MdnsDeviceFinder mdnsDeviceFinder = new MdnsDeviceFinder();
-        OSCController oscController = new OSCController(9001);
+        ApplicationStateManager asm = new ApplicationStateManager();
 
-        List<MdnsDevice> availableDevices = mdnsDeviceFinder.find();
-        List<IDevice> devices = new ArrayList<>();
-        OSCMessageQueue<Float> headpatMessageQueue = new OSCMessageQueue<>("headpatQueue");
-
-        for(MdnsDevice availableDevice:availableDevices){
-            if(availableDevice.getApplication().equals("nhd")) {
-                NhdHapticDeviceClient nhdHapticDeviceClient = new NhdHapticDeviceClient(availableDevice.getIpAddress(), availableDevice.getPort());
-
-                if (availableDevice.getName().contains("hapticpuck-0001")) {
-                    devices.add(new HapticPuck(nhdHapticDeviceClient, headpatMessageQueue));
-                }
-            }
-        }
-
-        OSCMessageListener headpatListener = oscMessageEvent -> headpatMessageQueue.addMessage((Float) oscMessageEvent.getMessage().getArguments().getFirst());
-
-        oscController.addListener("/avatar/parameters/VFH/Zone/Touch/Headpats/Others", headpatListener);
-        oscController.startListening();
+        asm.findNetworkDevices();
+        asm.createListenerForDevice(asm.getDevices().getFirst(), "/avatar/parameters/VFH/Zone/Touch/Headpats/Others");
+        asm.oscStart();
 
         while(true){
-            for(IDevice device : devices){
-                device.loop();
-            }
+            asm.loopDevices();
         }
     }
 }

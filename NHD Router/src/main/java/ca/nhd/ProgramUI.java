@@ -9,11 +9,13 @@ import java.io.IOException;
 public class ProgramUI {
 
     public static void main(String... args) throws IOException {
+        ApplicationStateManager asm = new ApplicationStateManager();
+
         JFrame frame = new JFrame("Simple GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 400);
 
-        MainForm mainForm = new MainForm();
+        MainForm mainForm = new MainForm(asm);
 
         frame.add(mainForm, BorderLayout.CENTER);
         frame.setResizable(false);
