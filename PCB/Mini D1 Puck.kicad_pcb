@@ -5552,18 +5552,6 @@
 		(layer "Edge.Cuts")
 		(uuid "9584fdbf-9d7b-4f9b-8eb9-6d2848f64800")
 	)
-	(gr_text "20250430"
-		(at 190 86 0)
-		(layer "F.Cu")
-		(uuid "d8510729-4b32-421b-b382-5442685a0da1")
-		(effects
-			(font
-				(size 1.5 1.5)
-				(thickness 0.1875)
-			)
-			(justify left bottom)
-		)
-	)
 	(gr_text "NHD-HP P1"
 		(at 170 72.5 270)
 		(layer "F.SilkS")
@@ -5573,6 +5561,18 @@
 				(size 1.5 1.5)
 				(thickness 0.3)
 				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "20250430"
+		(at 190 86 0)
+		(layer "F.SilkS")
+		(uuid "d8510729-4b32-421b-b382-5442685a0da1")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.1875)
 			)
 			(justify left bottom)
 		)
