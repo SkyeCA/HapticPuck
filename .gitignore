@@ -1,4 +1,5 @@
 node_modules/**
 OscDeviceRouter/node_modules/**
 .DS_Store
-
+PCB/Gerber/**.zip
+PCB/**-backups/**
