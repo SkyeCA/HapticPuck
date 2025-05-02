@@ -1,5 +1,7 @@
 node_modules/**
 OscDeviceRouter/node_modules/**
+NHDRouterElectron/node_modules/**
+NHDRouterElectron/.webpack/**
 .DS_Store
 PCB/Gerber/**.zip
 PCB/**-backups/**
