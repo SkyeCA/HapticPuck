@@ -7,12 +7,6 @@ import com.jgoodies.forms.layout.*;
 /*
  * Created by JFormDesigner on Mon Apr 28 13:29:00 ADT 2025
  */
-
-
-
-/**
- * @author connoroliver
- */
 public class MainForm extends JPanel {
 	public MainForm() {
 		initComponents();

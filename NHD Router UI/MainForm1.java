@@ -7,12 +7,6 @@ import javax.swing.table.*;
 /*
  * Created by JFormDesigner on Mon Apr 28 19:36:12 ADT 2025
  */
-
-
-
-/**
- * @author connoroliver
- */
 public class MainForm1 extends JPanel {
 	public MainForm1() {
 		initComponents();

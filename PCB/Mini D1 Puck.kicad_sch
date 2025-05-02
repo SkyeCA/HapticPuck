@@ -8,7 +8,7 @@
 		(title "NHD HapticPuck")
 		(date "2025-04-30")
 		(rev "0.1")
-		(company "Connor Oliver")
+		(company "SkyeCA")
 	)
 	(lib_symbols
 		(symbol "Connector:Conn_01x02_Socket"

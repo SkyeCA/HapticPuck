@@ -14,10 +14,6 @@ import javax.swing.table.*;
  */
 
 
-
-/**
- * @author connoroliver
- */
 public class MainForm extends JPanel {
 	private final ApplicationStateManager asm;
 
