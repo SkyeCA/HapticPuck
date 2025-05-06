@@ -34,7 +34,8 @@ const version = async (device) => {
 const healthCheck = async (device) => {
     try{
         const response = (await axios.get(`http://${device.ip}:${device.port}/cat`, {
-            timeout: 1000
+            timeout: 1000,
+            signal: AbortSignal.timeout(1000)
         }))?.data
 
         if(response === "Meow (=･ω･=)"){

@@ -1,7 +1,7 @@
 require('dotenv').config()
 require('./mdnsDeviceFinder')
 const { devices, oscParams, oscParamCache } = require('./db')
-const { ping, healthCheck } = require('./devices/nhdHttpClient')
+const { ping, healthCheck, vibrate, reset } = require('./devices/nhdHttpClient')
 const oscServer = require('./osc')
 const express = require('express')
 const app = express()
@@ -51,8 +51,21 @@ app.get('/devices/:deviceName/ping', async (req, res) => {
   return res.send(response)
 })
 
-app.get('/devices/:deviceName/reset', (req, res) => {
-  return "Factory Reset Device"
+app.get('/devices/:deviceName/reset', async(req, res) => {
+  const { deviceName } = req.params;
+
+  if(!devices.has(deviceName)){
+    return res.status(404).send("Device Not Found")
+  }
+
+  const device = devices.get(deviceName)
+
+  if(!device.available){
+    return res.status(400).send("Device is not available")
+  }
+
+  const response = await reset(device)
+  return res.send(response)
 })
 
 app.get('/devices/:deviceName/health', async (req, res) => {
@@ -68,13 +81,26 @@ app.get('/devices/:deviceName/health', async (req, res) => {
     return res.status(400).send("Device is not available")
   }
 
-  res.send({
+  return res.send({
     passed: await healthCheck(device)
   })
 })
 
-app.post('/devices/:deviceName/vibrate/:level', (req, res) => {
-  return "Set vibration level"
+app.post('/devices/:deviceName/vibrate/:level', async (req, res) => {
+  const { deviceName, level } = req.params;
+
+  if(!devices.has(deviceName)){
+    return res.status(404).send("Device Not Found")
+  }
+
+  const device = devices.get(deviceName)
+
+  if(!device.available){
+    return res.status(400).send("Device is not available")
+  }
+
+  const response = await vibrate(device, level)
+  return res.send(response)
 }) 
 
 app.post('/osc/param', (req, res) => {
@@ -91,7 +117,7 @@ app.post('/osc/param', (req, res) => {
   oscParams.set(oscParam, deviceName)
   oscParamCache.set(oscParam, [])
 
-  res.send("Ok")
+  return res.send("Ok")
 }) 
 
 app.delete('/osc/param', (req, res) => {
@@ -108,17 +134,17 @@ app.delete('/osc/param', (req, res) => {
   oscParams.delete(oscParam)
   oscParamCache.del(oscParam)
 
-  res.send("Ok")
+  return res.send("Ok")
 }) 
 
-app.post('/debug/osc/param/cache', (req, res) => {
+app.post('/osc/param/cache', (req, res) => {
   const { oscParam } = req.body
 
   if(!oscParamCache.has(oscParam)){
     return res.status(400).send("OSC Param Cache Doesn't Exist")
   }
 
-  res.send(oscParamCache.get(oscParam))
+  return res.send(oscParamCache.get(oscParam))
 }) 
 
 
