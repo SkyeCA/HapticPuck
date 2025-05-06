@@ -1,18 +1,29 @@
 require('dotenv').config()
 require('./mdnsDeviceFinder')
 const { devices, oscParams, oscParamCache } = require('./db')
-const { ping, healthCheck, vibrate, reset } = require('./devices/nhdHttpClient')
-const oscServer = require('./osc')
+const { nhdHttpClient } = require('./deviceClients')
+const { oscServer, oscParamQueueHandler } = require('./osc')
+const config = require('./config')
+const logger = require('./logger')
 const express = require('express')
+
+
 const app = express()
-const port = process.env.PORT
+
+app.use(express.json())
 
 // Init Empty Cache For Params
 oscParams.getAll().forEach(({ key }) => {
   oscParamCache.set(key, [])
 })
 
-app.use(express.json())
+// Start OSC queue handler
+setInterval(oscParamQueueHandler, process.env.QUEUE_HANDLER_INTERVAL)
+
+app.get('/paramQueue', async (req, res) => {
+  await oscParamQueueHandler()
+  res.send("Ok")
+})
 
 app.get('/devices', (req, res) => {
   res.send(devices.getAll().map(({value }) => value))
@@ -22,6 +33,7 @@ app.get('/devices/:deviceName', (req, res) => {
   const { deviceName } = req.params;
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
@@ -38,16 +50,18 @@ app.get('/devices/:deviceName/ping', async (req, res) => {
   const { deviceName } = req.params;
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   const device = devices.get(deviceName)
 
   if(!device.available){
+    logger.warn(`Device ${deviceName} not available`)
     return res.status(400).send("Device is not available")
   }
 
-  const response = await ping(device)
+  const response = await nhdHttpClient.ping(device)
   return res.send(response)
 })
 
@@ -55,16 +69,18 @@ app.get('/devices/:deviceName/reset', async(req, res) => {
   const { deviceName } = req.params;
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   const device = devices.get(deviceName)
 
   if(!device.available){
+    logger.warn(`Device ${deviceName} not available`)
     return res.status(400).send("Device is not available")
   }
 
-  const response = await reset(device)
+  const response = await nhdHttpClient.reset(device)
   return res.send(response)
 })
 
@@ -72,17 +88,19 @@ app.get('/devices/:deviceName/health', async (req, res) => {
   const { deviceName } = req.params;
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   const device = devices.get(deviceName)
 
   if(!device.available){
+    logger.warn(`Device ${deviceName} not available`)
     return res.status(400).send("Device is not available")
   }
 
   return res.send({
-    passed: await healthCheck(device)
+    passed: await nhdHttpClient.healthCheck(device)
   })
 })
 
@@ -90,16 +108,18 @@ app.post('/devices/:deviceName/vibrate/:level', async (req, res) => {
   const { deviceName, level } = req.params;
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   const device = devices.get(deviceName)
 
   if(!device.available){
+    logger.warn(`Device ${deviceName} not available`)
     return res.status(400).send("Device is not available")
   }
 
-  const response = await vibrate(device, level)
+  const response = await nhdHttpClient.vibrate(device, level)
   return res.send(response)
 }) 
 
@@ -107,10 +127,12 @@ app.post('/osc/param', (req, res) => {
   const { deviceName, oscParam } = req.body
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   if(oscParams.has(oscParam)){
+    logger.warn(`OSC Param ${oscParam} already assigned`)
     return res.status(400).send("OSC Param Already Assigned")
   }
 
@@ -124,10 +146,12 @@ app.delete('/osc/param', (req, res) => {
   const { deviceName, oscParam } = req.body
 
   if(!devices.has(deviceName)){
+    logger.warn(`Device ${deviceName} not found`)
     return res.status(404).send("Device Not Found")
   }
 
   if(!oscParams.has(oscParam)){
+    logger.warn(`OSC Param ${oscParam} not found`)
     return res.status(400).send("OSC Param Not Found")
   }
 
@@ -141,6 +165,7 @@ app.post('/osc/param/cache', (req, res) => {
   const { oscParam } = req.body
 
   if(!oscParamCache.has(oscParam)){
+    logger.warn(`OSC Param Cache ${oscParam} doesn't exist`)
     return res.status(400).send("OSC Param Cache Doesn't Exist")
   }
 
@@ -148,7 +173,7 @@ app.post('/osc/param/cache', (req, res) => {
 }) 
 
 
-app.listen(port, () => {
-  console.log(`Started NHD Router on port ${port}`)
+app.listen(config.nhdServerPort, () => {
+  logger.info(`Started NHD Router on port ${config.nhdServerPort}`)
 })
 

@@ -1,5 +1,7 @@
 const axios = require('axios')
 const { sleep } = require('../utils')
+const { devices } = require('../db')
+const logger = require('../logger')
  
 const cat = async (device) => {
     try{
@@ -7,7 +9,7 @@ const cat = async (device) => {
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
@@ -17,7 +19,7 @@ const copyright = async (device) => {
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
@@ -27,7 +29,7 @@ const version = async (device) => {
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
@@ -44,7 +46,7 @@ const healthCheck = async (device) => {
 
         return false
     } catch (error){
-        console.error(error)
+        logger.error(error)
         return false
     }
 }
@@ -55,7 +57,7 @@ const batteryLevel = async (device) => {
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
@@ -67,7 +69,7 @@ const ping = async (device) => {
         await sleep(500)
         await vibrate(device, 0)
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
@@ -77,17 +79,18 @@ const reset = async (device) => {
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 
 const vibrate = async (device, step) => {
     try{
         const response = (await axios.get(`http://${device.ip}:${device.port}/vibrate?val=${step}`))?.data
+        devices.set(`${device.name}.currentStep`, step)
 
         return response
     } catch (error){
-        console.error(error)
+        logger.error(error)
     }
 }
 

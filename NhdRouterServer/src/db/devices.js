@@ -1,3 +1,3 @@
 const { FSDB } = require("file-system-db");
 
-module.exports = new FSDB("./storage/db.json", false);
+module.exports = new FSDB("./storage/devices.json", false);

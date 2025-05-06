@@ -4,6 +4,7 @@
         "type": "nhd",
         "port": 7593,
         "ip": "192.168.0.232",
+        "currentStep": 0,
         "available": false,
         "lastHealthCheck": null
     }
