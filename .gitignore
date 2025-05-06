@@ -1,6 +1,7 @@
 node_modules/**
 OscDeviceRouter/node_modules/**
 NHDRouterServer/node_modules/**
+NHDRouterServer/**.log
 .DS_Store
 PCB/Gerber/**.zip
 PCB/**-backups/**
