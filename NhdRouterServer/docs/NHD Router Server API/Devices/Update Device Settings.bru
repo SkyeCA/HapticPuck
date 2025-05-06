@@ -1,0 +1,22 @@
+meta {
+  name: Update Device Settings
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/devices/nhd-hapticpuck-0001
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "nhd-hapticpuck-0001",
+      "type": "nhd",
+      "port": 7593,
+      "ip": "192.168.0.232",
+      "available": true,
+      "lastHealthCheck": "2025-05-06T15:09:34.697Z"
+  }
+}

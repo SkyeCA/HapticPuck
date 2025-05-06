@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "NHD Router Server API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

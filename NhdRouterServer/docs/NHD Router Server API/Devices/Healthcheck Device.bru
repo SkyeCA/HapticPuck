@@ -1,0 +1,11 @@
+meta {
+  name: Healthcheck Device
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/devices/nhd-hapticpuck-0001/health
+  body: none
+  auth: inherit
+}

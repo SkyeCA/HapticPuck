@@ -1,0 +1,17 @@
+meta {
+  name: Get Cache For Parameter
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/debug/osc/param/cache
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "oscParam": "/test/Param"
+  }
+}

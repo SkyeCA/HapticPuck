@@ -1,0 +1,18 @@
+meta {
+  name: Assign OSC Param to Device
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/osc/param
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "oscParam": "/test/Param",
+    "deviceName": "nhd-hapticpuck-0001"
+  }
+}

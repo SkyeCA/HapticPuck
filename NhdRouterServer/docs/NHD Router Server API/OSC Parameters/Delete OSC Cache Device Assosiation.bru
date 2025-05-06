@@ -1,0 +1,18 @@
+meta {
+  name: Delete OSC Cache Device Assosiation
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:3000/osc/param
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "oscParam": "/test/Param",
+    "deviceName": "nhd-hapticpuck-0001"
+  }
+}

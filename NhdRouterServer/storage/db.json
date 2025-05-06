@@ -1,0 +1,10 @@
+{
+    "nhd-hapticpuck-0001": {
+        "name": "nhd-hapticpuck-0001",
+        "type": "nhd",
+        "port": 7593,
+        "ip": "192.168.0.232",
+        "available": false,
+        "lastHealthCheck": null
+    }
+}
