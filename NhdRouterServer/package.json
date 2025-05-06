@@ -2,20 +2,31 @@
   "name": "NhdRouterServer",
   "version": "1.0.0",
   "main": "src/index.js",
+  "bin": "src/index.js",
   "author": "SkyeCA",
-  "license": "None",
+  "license": "UNLICENSED",
+  "pkg": {
+    "scripts": [
+      "node_modules/node-osc/**/*.mjs"
+    ]
+  },
   "dependencies": {
-    "axios": "^1.9.0",
+    "axios": "^0.27.2",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "file-system-db": "^2.1.0",
     "mdns": "^2.7.2",
     "node-cache": "^5.1.2",
     "node-osc": "^9.1.4",
+    "webpack": "^5.99.8",
     "winston": "^3.17.0"
   },
   "scripts": {
     "start": "node ./src/index.js",
-    "build": "ncc build -o build/lib src/index.js && pkg --target node18-macos-x64 -o build/nhdServer ./build/lib/index.js"
+    "build": "ncc build -o build/lib build/bundle/main.js && pkg --target node18-macos-arm64 -o build/nhdServer ./build/lib/index.js",
+    "bundle": "webpack --config webpack.config.js"
+  },
+  "devDependencies": {
+    "webpack-cli": "^6.0.1"
   }
 }
