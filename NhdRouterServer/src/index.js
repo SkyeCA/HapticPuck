@@ -3,6 +3,7 @@ require('./mdnsDeviceFinder')
 const { devices, oscParams, oscParamCache } = require('./db')
 const { nhdHttpClient } = require('./deviceClients')
 const { oscServer, oscParamQueueHandler } = require('./osc')
+const deviceHealthCheck = require('./mdnsDeviceFinder/healthCheck')
 const config = require('./config')
 const logger = require('./logger')
 const express = require('express')
@@ -17,7 +18,10 @@ oscParams.getAll().forEach(({ key }) => {
 })
 
 // Start OSC queue handler
-setInterval(oscParamQueueHandler, process.env.QUEUE_HANDLER_INTERVAL)
+setInterval(oscParamQueueHandler, config.queueHandlerInterval)
+
+// Start periodic device health check
+setInterval(deviceHealthCheck, config.deviceHealthCheckInterval)
 
 app.get('/devices', (req, res) => {
   res.send(devices.getAll().map(({value }) => value))
@@ -164,6 +168,10 @@ app.post('/osc/param/cache', (req, res) => {
   }
 
   return res.send(oscParamCache.get(oscParam))
+}) 
+
+app.get('health', (req, res) => {
+  return res.send("Ok")
 }) 
 
 app.listen(config.nhdServerPort, () => {
