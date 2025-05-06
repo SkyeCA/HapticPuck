@@ -1,7 +1,7 @@
 {
   "name": "NhdRouterServer",
   "version": "1.0.0",
-  "main": "main/index.js",
+  "main": "src/index.js",
   "author": "SkyeCA",
   "license": "None",
   "dependencies": {
@@ -15,6 +15,7 @@
     "winston": "^3.17.0"
   },
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "build": "ncc build -o build/lib src/index.js && pkg --target node18-macos-x64 -o build/nhdServer ./build/lib/index.js"
   }
 }
