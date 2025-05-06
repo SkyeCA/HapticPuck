@@ -7,7 +7,6 @@ const config = require('./config')
 const logger = require('./logger')
 const express = require('express')
 
-
 const app = express()
 
 app.use(express.json())
@@ -19,11 +18,6 @@ oscParams.getAll().forEach(({ key }) => {
 
 // Start OSC queue handler
 setInterval(oscParamQueueHandler, process.env.QUEUE_HANDLER_INTERVAL)
-
-app.get('/paramQueue', async (req, res) => {
-  await oscParamQueueHandler()
-  res.send("Ok")
-})
 
 app.get('/devices', (req, res) => {
   res.send(devices.getAll().map(({value }) => value))
@@ -171,7 +165,6 @@ app.post('/osc/param/cache', (req, res) => {
 
   return res.send(oscParamCache.get(oscParam))
 }) 
-
 
 app.listen(config.nhdServerPort, () => {
   logger.info(`Started NHD Router on port ${config.nhdServerPort}`)
