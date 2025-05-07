@@ -1,5 +1,5 @@
 node_modules/**
-OscDeviceRouter/node_modules/**
+Archive/OscDeviceRouter/node_modules/**
 NHDRouterServer/node_modules/**
 NHDRouterServer/**.log
 NHDRouterServer/build/**
