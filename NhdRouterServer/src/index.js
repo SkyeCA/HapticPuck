@@ -1,9 +1,9 @@
 require('dotenv').config()
-require('./mdnsDeviceFinder')
+require('./deviceFinder/mdnsScanner')
 const { devices, oscParams, oscParamCache } = require('./db')
 const { nhdHttpClient } = require('./deviceClients')
 const { oscServer, oscParamQueueHandler } = require('./osc')
-const deviceHealthCheck = require('./mdnsDeviceFinder/healthCheck')
+const { healthChecker } = require('./deviceFinder')
 const config = require('./config')
 const logger = require('./logger')
 const express = require('express')
@@ -21,7 +21,7 @@ oscParams.getAll().forEach(({ key }) => {
 setInterval(oscParamQueueHandler, config.queueHandlerInterval)
 
 // Start periodic device health check
-setInterval(deviceHealthCheck, config.deviceHealthCheckInterval)
+setInterval(healthChecker, config.deviceHealthCheckInterval)
 
 app.get('/devices', (req, res) => {
   res.send(devices.getAll().map(({value }) => value))
