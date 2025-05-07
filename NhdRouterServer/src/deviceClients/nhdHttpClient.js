@@ -46,7 +46,7 @@ const healthCheck = async (device) => {
 
         return false
     } catch (error){
-        logger.error(error)
+        logger.error(error.message)
         return false
     }
 }
