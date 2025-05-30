@@ -3,8 +3,10 @@
 #include <ESP8266mDNS.h>
 
 #define NETWORK_PORT 7593
-#define VIBRATOR_PIN D5
-#define VERSION "0.2"
+#define VIBRATOR_PIN D1
+#define BATTERY_READ_EN_PIN D6
+#define BATTERY_READ_PIN A0
+#define VERSION "0.3"
 #define MIN_VIBRATE 75
 #define STEP_VAL 7.5
 
@@ -51,7 +53,17 @@ void handleVibrate() {
 
 void handleBattery() {
   Serial.println("Battery Handler Invoked");
-  server->send(200, "text/plain", "24");
+
+  digitalWrite(BATTERY_READ_EN_PIN, HIGH);
+
+  delay(200);
+  int readValue = analogRead(BATTERY_READ_PIN);
+
+  Serial.print("Read battery level: ");
+  Serial.println(readValue);
+
+  digitalWrite(BATTERY_READ_EN_PIN, LOW);
+  server->send(200, "text/plain", String(readValue));
 }
 
 void handleReset() {
@@ -75,6 +87,11 @@ void handleCat() {
   server->send(200, "text/plain", "Meow (=･ω･=)");
 }
 
+void handleCompatibility() {
+  Serial.println("Handle Compatibility Invoked");
+  server->send(200, "text/plain", "HapticPuck3/nhd");
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -83,17 +100,17 @@ void setup() {
   // Configure Wifi to work with Bell GigaHub
   WiFi.persistent(false);
   WiFi.setPhyMode(WIFI_PHY_MODE_11G);
-  WiFi.hostname("nhd-hapticpuck-0001");
+  WiFi.hostname("nhd-hapticpuck-0003");
   //WiFi.mode(WIFI_STA); 
 
   // Start WifiManager AP
   Serial.println("WM Start");
   //wifiManager.setDebugOutput(false);
-  wifiManager.autoConnect("NHD-HapticPuck-0001");
+  wifiManager.autoConnect("NHD-HapticPuck-0003");
 
   // Start mdns
   Serial.println("mDNS Start");
-  if (!MDNS.begin("nhd-hapticpuck-0001")) {
+  if (!MDNS.begin("nhd-hapticpuck-0003")) {
     Serial.println("Error setting up MDNS responder!");
     while (1) { delay(1000); }
   }
@@ -106,6 +123,7 @@ void setup() {
   server->on("/vibrate", handleVibrate);
   server->on("/version", handleVersion);
   server->on("/copyright", handleCopyright);
+    server->on("/compatibility", handleCompatibility);
   server->on("/cat", handleCat);
   server->onNotFound(handleNotFound);
   server->begin();
