@@ -6,12 +6,32 @@
 #define VIBRATOR_PIN D1
 #define BATTERY_READ_EN_PIN D6
 #define BATTERY_READ_PIN A0
+#define RESET_BUTTON_PIN D2
 #define VERSION "0.3"
 #define MIN_VIBRATE 75
 #define STEP_VAL 7.5
 
 WiFiManager wifiManager;
 std::unique_ptr<ESP8266WebServer> server;
+
+void ICACHE_RAM_ATTR resetDevice(){
+  Serial.println("Factory reset in progress.");
+  WiFi.disconnect(true);
+  ESP.eraseConfig();
+  ESP.restart();
+}
+
+int readBatteryLevel(){
+  digitalWrite(BATTERY_READ_EN_PIN, HIGH);
+  delay(200);
+  int readValue = analogRead(BATTERY_READ_PIN);
+
+  Serial.print("Read battery level: ");
+  Serial.println(readValue);
+  digitalWrite(BATTERY_READ_EN_PIN, LOW);
+
+  return readValue;
+}
 
 void handleRoot() {
   Serial.println("Root Handler Invoked");
@@ -54,22 +74,14 @@ void handleVibrate() {
 void handleBattery() {
   Serial.println("Battery Handler Invoked");
 
-  digitalWrite(BATTERY_READ_EN_PIN, HIGH);
+  int value = readBatteryLevel();
 
-  delay(200);
-  int readValue = analogRead(BATTERY_READ_PIN);
-
-  Serial.print("Read battery level: ");
-  Serial.println(readValue);
-
-  digitalWrite(BATTERY_READ_EN_PIN, LOW);
-  server->send(200, "text/plain", String(readValue));
+  server->send(200, "text/plain", String(value));
 }
 
 void handleReset() {
   server->send(200, "text/plain", "Ok");
-  WiFi.disconnect(true);
-  ESP.eraseConfig();
+  resetDevice();
 }
 
 void handleVersion() {
@@ -97,20 +109,25 @@ void setup() {
 
   Serial.println("Init");
 
+  // Setup Pins
+  pinMode(BATTERY_READ_PIN, INPUT); 
+  //digitalWrite(BATTERY_READ_EN_PIN, HIGH);
+  //attachInterrupt(RESET_BUTTON_PIN, resetDevice, FALLING);
+
   // Configure Wifi to work with Bell GigaHub
   WiFi.persistent(false);
   WiFi.setPhyMode(WIFI_PHY_MODE_11G);
-  WiFi.hostname("nhd-hapticpuck-0003");
+  WiFi.hostname("nhd-hapticpuck-0004");
   //WiFi.mode(WIFI_STA); 
 
   // Start WifiManager AP
   Serial.println("WM Start");
   //wifiManager.setDebugOutput(false);
-  wifiManager.autoConnect("NHD-HapticPuck-0003");
+  wifiManager.autoConnect("NHD-HapticPuck-0004");
 
   // Start mdns
   Serial.println("mDNS Start");
-  if (!MDNS.begin("nhd-hapticpuck-0003")) {
+  if (!MDNS.begin("nhd-hapticpuck-0004")) {
     Serial.println("Error setting up MDNS responder!");
     while (1) { delay(1000); }
   }
@@ -138,4 +155,11 @@ void setup() {
 void loop() {
   server->handleClient();
   MDNS.update();
+if (digitalRead(RESET_BUTTON_PIN) == HIGH){
+  Serial.println("Pressed reset high");
+}
+
+if (digitalRead(RESET_BUTTON_PIN) == LOW){
+  Serial.println("Pressed reset low");
+}
 }
