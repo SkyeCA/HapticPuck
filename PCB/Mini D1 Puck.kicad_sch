@@ -2439,6 +2439,12 @@
 		(uuid "018c04b2-6b31-40ca-8554-21d68df04f17")
 	)
 	(junction
+		(at 72.39 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "104e98f5-a939-4c9e-b180-e5d41174a9db")
+	)
+	(junction
 		(at 83.82 58.42)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2757,6 +2763,16 @@
 			(type default)
 		)
 		(uuid "5d938c4d-26a1-47a4-9c44-06db5b75b0d0")
+	)
+	(wire
+		(pts
+			(xy 72.39 93.98) (xy 72.39 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61856e2d-f16f-4a9c-81a1-e123e4c7e1d4")
 	)
 	(wire
 		(pts
@@ -3863,6 +3879,72 @@
 			(project ""
 				(path "/bd8e677d-9a0d-480d-b73d-a24a4e82a69f"
 					(reference "C1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 72.39 97.79 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "44db9951-1227-484c-b91e-7288d2200320")
+		(property "Reference" "#PWR018"
+			(at 72.39 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 72.39 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 72.39 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 72.39 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 72.39 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c9e4c08e-5014-4432-a660-c78d1bad4883")
+		)
+		(instances
+			(project "Mini D1 Puck"
+				(path "/bd8e677d-9a0d-480d-b73d-a24a4e82a69f"
+					(reference "#PWR018")
 					(unit 1)
 				)
 			)
