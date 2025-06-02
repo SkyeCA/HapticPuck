@@ -110,9 +110,8 @@ void setup() {
   Serial.println("Init");
 
   // Setup Pins
-  pinMode(BATTERY_READ_PIN, INPUT); 
-  //digitalWrite(BATTERY_READ_EN_PIN, HIGH);
-  //attachInterrupt(RESET_BUTTON_PIN, resetDevice, FALLING);
+  //pinMode(BATTERY_READ_PIN, INPUT);
+  attachInterrupt(RESET_BUTTON_PIN, resetDevice, RISING);
 
   // Configure Wifi to work with Bell GigaHub
   WiFi.persistent(false);
@@ -140,7 +139,7 @@ void setup() {
   server->on("/vibrate", handleVibrate);
   server->on("/version", handleVersion);
   server->on("/copyright", handleCopyright);
-    server->on("/compatibility", handleCompatibility);
+  server->on("/compatibility", handleCompatibility);
   server->on("/cat", handleCat);
   server->onNotFound(handleNotFound);
   server->begin();
@@ -155,11 +154,4 @@ void setup() {
 void loop() {
   server->handleClient();
   MDNS.update();
-if (digitalRead(RESET_BUTTON_PIN) == HIGH){
-  Serial.println("Pressed reset high");
-}
-
-if (digitalRead(RESET_BUTTON_PIN) == LOW){
-  Serial.println("Pressed reset low");
-}
 }
