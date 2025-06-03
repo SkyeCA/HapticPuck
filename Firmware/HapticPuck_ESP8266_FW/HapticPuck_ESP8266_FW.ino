@@ -10,6 +10,11 @@
 #define VERSION "0.3"
 #define MIN_VIBRATE 75
 #define STEP_VAL 7.5
+#define BATTERY_DISCHARGE_STEPS 845
+#define BATTERY_CHARGED_STEPS 1315
+#define BATTERY_DISCHARGE_VOLTS 2.7
+#define BATTERY_CHARGED_VOLTS 4.2
+#define ADC_STEP_DIVISION_VOLTS 0.0032
 
 WiFiManager wifiManager;
 std::unique_ptr<ESP8266WebServer> server;
@@ -21,16 +26,24 @@ void ICACHE_RAM_ATTR resetDevice(){
   ESP.restart();
 }
 
+float calculateBatteryVoltage(int adcSteps){
+  return ADC_STEP_DIVISION_VOLTS * adcSteps;
+}
+
+float calculateBatteryPercent(int adcSteps){
+  return ((calculateBatteryVoltage(adcSteps)-BATTERY_DISCHARGE_VOLTS) * 100) / (BATTERY_CHARGED_VOLTS - BATTERY_DISCHARGE_VOLTS);
+}
+
 int readBatteryLevel(){
   digitalWrite(BATTERY_READ_EN_PIN, HIGH);
   delay(200);
-  int readValue = analogRead(BATTERY_READ_PIN);
+  int adcSteps = analogRead(BATTERY_READ_PIN);
 
   Serial.print("Read battery level: ");
-  Serial.println(readValue);
+  Serial.println(adcSteps);
   digitalWrite(BATTERY_READ_EN_PIN, LOW);
 
-  return readValue;
+  return adcSteps;
 }
 
 void handleRoot() {
@@ -71,12 +84,30 @@ void handleVibrate() {
   return;
 }
 
-void handleBattery() {
-  Serial.println("Battery Handler Invoked");
+void handleBatteryPercent() {
+  Serial.println("Battery Percent Handler Invoked");
 
-  int value = readBatteryLevel();
+  int batteryAdcSteps = readBatteryLevel();
+  float batteryPercent = calculateBatteryPercent(batteryAdcSteps);
 
-  server->send(200, "text/plain", String(value));
+  server->send(200, "text/plain", String(batteryPercent));
+}
+
+void handleBatteryVoltage() {
+  Serial.println("Battery Voltage Handler Invoked");
+
+  int batteryAdcSteps = readBatteryLevel();
+  float batteryVoltage = calculateBatteryVoltage(batteryAdcSteps);
+
+  server->send(200, "text/plain", String(batteryVoltage));
+}
+
+void handleBatterySteps() {
+  Serial.println("Battery Steps Handler Invoked");
+
+  int batteryAdcSteps = readBatteryLevel();
+
+  server->send(200, "text/plain", String(batteryAdcSteps));
 }
 
 void handleReset() {
@@ -134,7 +165,9 @@ void setup() {
   Serial.println("Server Start");
   server.reset(new ESP8266WebServer(WiFi.localIP(), NETWORK_PORT));
   server->on("/", handleRoot);
-  server->on("/battery", handleBattery);
+  server->on("/battery/percent", handleBatteryPercent);
+  server->on("/battery/voltage", handleBatteryVoltage);
+  server->on("/battery/steps", handleBatterySteps);
   server->on("/reset", handleReset);
   server->on("/vibrate", handleVibrate);
   server->on("/version", handleVersion);
