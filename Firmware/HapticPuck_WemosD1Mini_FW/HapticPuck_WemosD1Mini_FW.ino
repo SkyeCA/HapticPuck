@@ -142,7 +142,7 @@ void handleCat() {
 }
 
 void handleDeviceId() {
-  Serial.println("Name Handler Invoked");
+  Serial.println("Device ID Handler Invoked");
   server->send(200, "text/plain", deviceId);
 }
 
@@ -159,9 +159,6 @@ void setup() {
   snprintf(deviceId,28, "nhd-hapticpuck-%04X%08X", (uint32_t) ESP.getChipId());
   Serial.print("Device ID is: ");
   Serial.println(deviceId);
-
-  // Get initial battery reading
-  //updateBatteryState();
 
   // Setup Pins
   attachInterrupt(RESET_BUTTON_PIN, resetDevice, RISING);

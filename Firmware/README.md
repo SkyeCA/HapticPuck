@@ -1,19 +1,19 @@
 # Firmware
 
-## HapticPuck_ESP8266_FW
+## HapticPuck_WemosD1Mini_FW
 
-ESP8266 specific firmware.
+Wemos D1 Mini specific firmware.
 
 ### Compatibility
 
-- Physically tested on the NodeMCU 0.9.
-- Should work as is on other ESP based boards like the Wemos D1 Mini that have pin 14 available.
+- Physically tested on the NodeMCU 0.9 and Wemos D1 Mini
+- Wemos D1 Mini is the target device.
 
 ### Naming
 
-<ins>AP Name:</ins> NHD-HapticPuck-[serial], ex: `NHD-HapticPuck-0001`
+<ins>AP Name:</ins> NHD-HapticPuck-[chipId], ex: `nhd-hapticpuck-AA0FD3`
 
-<ins>Hostname:</ins> nhd-hapticpuck-[serial], ex: `nhd-hapticpuck-0001`
+<ins>Hostname:</ins> nhd-hapticpuck-[chipId], ex: `nhd-hapticpuck-AA0FD3`
 
 ### Services Provided
 
@@ -34,22 +34,27 @@ All responses are `text/plain` unless otherwise stated.
     - Returns: 
         - 200:
             - `Ok`
-- /battery [GET]
+- /battery/percent [GET]
     - Returns: 
         - 200:
-            - `0..100`
-    - Notes: Not implemented, currently always returns `24`
+            - `87`
+- /battery/voltage [GET]
+    - Returns: 
+        - 200:
+            - `3.7`
 - /reset [GET]
     - Returns: 
         - 200:
             - `Ok`
-    - Notes: Factory Resets Device
+    - Notes: Factory Resets Device Immediately
 - /vibrate [GET]
     - Params:
         - `val`: `0..20`
     - Returns:
         - 500:
             - When no `val` parameter is provided.
+        - 503:
+            - Device battery is depleted, device is disabled.
         - 400:
             - When `val` parameter is outside acceptable range.
         - 200:
@@ -66,6 +71,15 @@ All responses are `text/plain` unless otherwise stated.
     - Returns: 
         - 200:
             - `Meow (=･ω･=)`
+- /id [GET]
+    - Returns: 
+        - 200:
+            - `nhd-hapticpuck-AA0FD3`
+- /compatibility [GET]
+    - Returns: 
+        - 200:
+            - `HapticPuck3/nhd`
+
 
 ### Serial Debug Settings
 
