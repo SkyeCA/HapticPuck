@@ -13,12 +13,14 @@
 // The following numbers account for voltage divider differences! Ex. 410 * 0.0032 = 1.31
 // 1.31v would be far too low for a li-ion battery, but the voltage divider difference needs to be added: 1.31 + 1.4 = 2.71
 #define BATTERY_DISCHARGE_STEPS 410
+#define BATTERY_LOW_STEPS 530
 #define BATTERY_CHARGED_STEPS 875
 #define VOLTAGE_DIVIDER_DIFF_VOLTS 1.4
 #define ADC_STEP_DIVISION_VOLTS 0.0032
 
 char deviceId[28];
 int batterySteps;
+bool lowBattery, depletedBattery = false;
 unsigned long lastBatteryCheckMillis;
 WiFiManager wifiManager;
 std::unique_ptr<ESP8266WebServer> server;
@@ -30,17 +32,30 @@ void ICACHE_RAM_ATTR resetDevice(){
   ESP.restart();
 }
 
+void lowBatteryStateHandler(){
+  if(!lowBattery && batterySteps <= BATTERY_LOW_STEPS){
+    lowBattery = true;
+    //vibrate motor in a pattern here
+  }
+
+  if(!depletedBattery && batterySteps <= BATTERY_DISCHARGE_STEPS){
+    depletedBattery = true;
+  }
+}
+
 void updateBatteryState(){
   if (millis() - lastBatteryCheckMillis >= 30*1000UL) {
     lastBatteryCheckMillis = millis();  
    
     digitalWrite(BATTERY_READ_EN_PIN, HIGH);
-    delay(500);
+    delay(200);
     batterySteps = analogRead(BATTERY_READ_PIN);
     digitalWrite(BATTERY_READ_EN_PIN, LOW);
 
     Serial.print("New battery level: ");
     Serial.println(batterySteps);
+
+    lowBatteryStateHandler();
   }
 }
 
@@ -64,6 +79,12 @@ void handleNotFound(){
 
 void handleVibrate() {
   Serial.println("Vibrate Handler Invoked");
+
+  if(depletedBattery){
+    Serial.println("Low battery, vibrate disabled.");
+    server->send(503, "text/plain", "Low battery, device disabled.");
+    return;
+  }
 
   if(!server->hasArg("val")){
     Serial.println("No val provided.");
@@ -140,7 +161,7 @@ void setup() {
   Serial.println(deviceId);
 
   // Get initial battery reading
-  updateBatteryState();
+  //updateBatteryState();
 
   // Setup Pins
   attachInterrupt(RESET_BUTTON_PIN, resetDevice, RISING);
