@@ -21,6 +21,7 @@ If you build this device or use any component of this project you agree that I w
 - NodeMCU
     - Fully tested and confirmed working, but not used in final design.
 - Wemos D1 Mini
+    - Fully tested and confirmed working
 
 ## Build Requirements
 
@@ -47,6 +48,7 @@ If you build this device or use any component of this project you agree that I w
 | TP4056 Module |  B07X8XPF74 (Amazon ASIN) | 1 |
 | 18350 Rechargeable Li-ion Battery | (No PN, can be found online) | 1 |
 | NHD-HP P1 PCB | Can be ordered from a service like OSHPark | 1 |
+| Platinum silicone | Kits can be found on Amazon | ? |
 -----------------------
 
 

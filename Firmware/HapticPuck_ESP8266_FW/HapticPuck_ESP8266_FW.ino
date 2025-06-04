@@ -7,15 +7,19 @@
 #define BATTERY_READ_EN_PIN D6
 #define BATTERY_READ_PIN A0
 #define RESET_BUTTON_PIN D2
-#define VERSION "0.3"
+#define VERSION "0.4"
 #define MIN_VIBRATE 75
 #define STEP_VAL 7.5
-#define BATTERY_DISCHARGE_STEPS 845
-#define BATTERY_CHARGED_STEPS 1315
-#define BATTERY_DISCHARGE_VOLTS 2.7
-#define BATTERY_CHARGED_VOLTS 4.2
+// The following numbers account for voltage divider differences! Ex. 410 * 0.0032 = 1.31
+// 1.31v would be far too low for a li-ion battery, but the voltage divider difference needs to be added: 1.31 + 1.4 = 2.71
+#define BATTERY_DISCHARGE_STEPS 410
+#define BATTERY_CHARGED_STEPS 875
+#define VOLTAGE_DIVIDER_DIFF_VOLTS 1.4
 #define ADC_STEP_DIVISION_VOLTS 0.0032
 
+char deviceId[28];
+int batterySteps;
+unsigned long lastBatteryCheckMillis;
 WiFiManager wifiManager;
 std::unique_ptr<ESP8266WebServer> server;
 
@@ -26,24 +30,26 @@ void ICACHE_RAM_ATTR resetDevice(){
   ESP.restart();
 }
 
-float calculateBatteryVoltage(int adcSteps){
-  return ADC_STEP_DIVISION_VOLTS * adcSteps;
+void updateBatteryState(){
+  if (millis() - lastBatteryCheckMillis >= 30*1000UL) {
+    lastBatteryCheckMillis = millis();  
+   
+    digitalWrite(BATTERY_READ_EN_PIN, HIGH);
+    delay(500);
+    batterySteps = analogRead(BATTERY_READ_PIN);
+    digitalWrite(BATTERY_READ_EN_PIN, LOW);
+
+    Serial.print("New battery level: ");
+    Serial.println(batterySteps);
+  }
 }
 
-float calculateBatteryPercent(int adcSteps){
-  return ((calculateBatteryVoltage(adcSteps)-BATTERY_DISCHARGE_VOLTS) * 100) / (BATTERY_CHARGED_VOLTS - BATTERY_DISCHARGE_VOLTS);
+float calculateBatteryVoltage(){
+  return (ADC_STEP_DIVISION_VOLTS * batterySteps) + VOLTAGE_DIVIDER_DIFF_VOLTS;
 }
 
-int readBatteryLevel(){
-  digitalWrite(BATTERY_READ_EN_PIN, HIGH);
-  delay(200);
-  int adcSteps = analogRead(BATTERY_READ_PIN);
-
-  Serial.print("Read battery level: ");
-  Serial.println(adcSteps);
-  digitalWrite(BATTERY_READ_EN_PIN, LOW);
-
-  return adcSteps;
+float calculateBatteryPercent(){
+  return ((batterySteps-BATTERY_DISCHARGE_STEPS) * 100) / (BATTERY_CHARGED_STEPS - BATTERY_DISCHARGE_STEPS);
 }
 
 void handleRoot() {
@@ -86,28 +92,12 @@ void handleVibrate() {
 
 void handleBatteryPercent() {
   Serial.println("Battery Percent Handler Invoked");
-
-  int batteryAdcSteps = readBatteryLevel();
-  float batteryPercent = calculateBatteryPercent(batteryAdcSteps);
-
-  server->send(200, "text/plain", String(batteryPercent));
+  server->send(200, "text/plain", String(calculateBatteryPercent()));
 }
 
 void handleBatteryVoltage() {
   Serial.println("Battery Voltage Handler Invoked");
-
-  int batteryAdcSteps = readBatteryLevel();
-  float batteryVoltage = calculateBatteryVoltage(batteryAdcSteps);
-
-  server->send(200, "text/plain", String(batteryVoltage));
-}
-
-void handleBatterySteps() {
-  Serial.println("Battery Steps Handler Invoked");
-
-  int batteryAdcSteps = readBatteryLevel();
-
-  server->send(200, "text/plain", String(batteryAdcSteps));
+  server->send(200, "text/plain", String(calculateBatteryVoltage()));
 }
 
 void handleReset() {
@@ -130,6 +120,11 @@ void handleCat() {
   server->send(200, "text/plain", "Meow (=･ω･=)");
 }
 
+void handleDeviceId() {
+  Serial.println("Name Handler Invoked");
+  server->send(200, "text/plain", deviceId);
+}
+
 void handleCompatibility() {
   Serial.println("Handle Compatibility Invoked");
   server->send(200, "text/plain", "HapticPuck3/nhd");
@@ -137,27 +132,33 @@ void handleCompatibility() {
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("Init...");
 
-  Serial.println("Init");
+  // Set device name
+  snprintf(deviceId,28, "nhd-hapticpuck-%04X%08X", (uint32_t) ESP.getChipId());
+  Serial.print("Device ID is: ");
+  Serial.println(deviceId);
+
+  // Get initial battery reading
+  updateBatteryState();
 
   // Setup Pins
-  //pinMode(BATTERY_READ_PIN, INPUT);
   attachInterrupt(RESET_BUTTON_PIN, resetDevice, RISING);
 
   // Configure Wifi to work with Bell GigaHub
   WiFi.persistent(false);
   WiFi.setPhyMode(WIFI_PHY_MODE_11G);
-  WiFi.hostname("nhd-hapticpuck-0004");
+  WiFi.hostname(deviceId);
   //WiFi.mode(WIFI_STA); 
 
   // Start WifiManager AP
   Serial.println("WM Start");
   //wifiManager.setDebugOutput(false);
-  wifiManager.autoConnect("NHD-HapticPuck-0004");
+  wifiManager.autoConnect(deviceId);
 
   // Start mdns
   Serial.println("mDNS Start");
-  if (!MDNS.begin("nhd-hapticpuck-0004")) {
+  if (!MDNS.begin(deviceId)) {
     Serial.println("Error setting up MDNS responder!");
     while (1) { delay(1000); }
   }
@@ -167,13 +168,13 @@ void setup() {
   server->on("/", handleRoot);
   server->on("/battery/percent", handleBatteryPercent);
   server->on("/battery/voltage", handleBatteryVoltage);
-  server->on("/battery/steps", handleBatterySteps);
   server->on("/reset", handleReset);
   server->on("/vibrate", handleVibrate);
   server->on("/version", handleVersion);
   server->on("/copyright", handleCopyright);
   server->on("/compatibility", handleCompatibility);
   server->on("/cat", handleCat);
+  server->on("/id", handleDeviceId);
   server->onNotFound(handleNotFound);
   server->begin();
 
@@ -187,4 +188,5 @@ void setup() {
 void loop() {
   server->handleClient();
   MDNS.update();
+  updateBatteryState();
 }
