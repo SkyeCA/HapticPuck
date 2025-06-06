@@ -6154,6 +6154,50 @@
 			)
 		)
 	)
+	(gr_circle
+		(center 83.25 86)
+		(end 88.25 89.5)
+		(stroke
+			(width 0.2)
+			(type default)
+		)
+		(fill no)
+		(layer "F.Cu")
+		(uuid "356dbfac-7c15-4b3d-9350-df0c951803ef")
+	)
+	(gr_circle
+		(center 83.5 47.5)
+		(end 88.5 51)
+		(stroke
+			(width 0.2)
+			(type default)
+		)
+		(fill no)
+		(layer "F.Cu")
+		(uuid "a17b5c1b-a822-46d2-9912-f520ee972c6e")
+	)
+	(gr_rect
+		(start 61.625 57.65)
+		(end 104.875 75.85)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Cu")
+		(uuid "b75b2103-048c-49ba-8dcd-12c95b38cbac")
+	)
+	(gr_circle
+		(center 83.11407 67)
+		(end 118.11407 67)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Cu")
+		(uuid "cb34d229-a051-4b7c-8d82-b66aeca6e372")
+	)
 	(gr_rect
 		(start 178.5 63.5)
 		(end 187.5 76.5)

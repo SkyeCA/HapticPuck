@@ -1,7 +1,4 @@
-#include <WiFiManager.h> // 2.0.17
-#include <ESP8266WebServer.h> 
-#include <ESP8266mDNS.h>
-
+#define WEBSERVER_H // Required to prevent collision between WebRequestMethod defined in WifiManager and ESPAsyncWebServer
 #define NETWORK_PORT 7593
 #define VIBRATOR_PIN D1
 #define BATTERY_READ_EN_PIN D6
@@ -12,22 +9,26 @@
 #define STEP_VAL 7.5
 // The following numbers account for voltage divider differences! Ex. 410 * 0.0032 = 1.31
 // 1.31v would be far too low for a li-ion battery, but the voltage divider difference needs to be added: 1.31 + 1.4 = 2.71
-// ------
-// Battery discharged at 3.57 volts. This is far above the minimum discharge level, but at this point the *current* battery
-// can not provide enough power for the puck to remain stable with a vibration level of 20.
-#define BATTERY_DISCHARGE_STEPS 680
-// Low battery warning at 3.68v
-#define BATTERY_LOW_STEPS 690
+#define BATTERY_DISCHARGE_STEPS 410
+#define BATTERY_LOW_STEPS 530
 #define BATTERY_CHARGED_STEPS 875
 #define VOLTAGE_DIVIDER_DIFF_VOLTS 1.4
 #define ADC_STEP_DIVISION_VOLTS 0.0032
+
+#include <WiFiManager.h> // 2.0.17
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <ESP8266mDNS.h>
 
 char deviceId[28];
 int batterySteps;
 bool lowBattery, depletedBattery = false;
 unsigned long lastBatteryCheckMillis;
 WiFiManager wifiManager;
-std::unique_ptr<ESP8266WebServer> server;
+AsyncWebServer server(NETWORK_PORT);
+AsyncWebSocket ws("/ws");
 
 void ICACHE_RAM_ATTR resetDevice(){
   Serial.println("Factory reset in progress.");
@@ -39,11 +40,13 @@ void ICACHE_RAM_ATTR resetDevice(){
 void lowBatteryStateHandler(){
   if(!lowBattery && batterySteps <= BATTERY_LOW_STEPS){
     lowBattery = true;
+    ws.textAll("BAT_LOW");
     //vibrate motor in a pattern here
   }
 
   if(!depletedBattery && batterySteps <= BATTERY_DISCHARGE_STEPS){
     depletedBattery = true;
+    ws.textAll("BAT_EMPTY");
   }
 }
 
@@ -71,88 +74,109 @@ float calculateBatteryPercent(){
   return ((batterySteps-BATTERY_DISCHARGE_STEPS) * 100) / (BATTERY_CHARGED_STEPS - BATTERY_DISCHARGE_STEPS);
 }
 
-void handleRoot() {
-  Serial.println("Root Handler Invoked");
-  server->send(200, "text/plain", "Ok");
-}
-
-void handleNotFound(){
-  Serial.println("Not Found Handler Invoked");
-  server->send(404, "text/plain", "404");
-}
-
 void handleVibrate() {
   Serial.println("Vibrate Handler Invoked");
 
   if(depletedBattery){
     Serial.println("Low battery, vibrate disabled.");
-    server->send(503, "text/plain", "Low battery, device disabled.");
+    ws.textAll("BAT_LOW_DISABLED");
     return;
   }
 
-  if(!server->hasArg("val")){
-    Serial.println("No val provided.");
-    server->send(500, "text/plain", "No Vibrate Val Provided. [0..20]");
-    return;
-  }
+  //if(!server->hasArg("val")){
+  //  Serial.println("No val provided.");
+  //  ws.textAll("No Vibrate Val Provided. [0..20]");
+  //  return;
+  //}
 
-  int vibrateValue = server->arg("val").toInt();
+  //int vibrateValue = server->arg("val").toInt();
+  int vibrateValue = 0;
 
   if(vibrateValue < 0 || vibrateValue > 20){
     Serial.println("Invalid val range");
-    server->send(400, "text/plain", "Only range 0..20 is valid");
+    ws.textAll("Only range 0..20 is valid");
     return;
   } else if(vibrateValue == 0){
     Serial.println("Turned off");
     analogWrite(VIBRATOR_PIN, 0);
-    server->send(200, "text/plain", "Ok");
+    ws.textAll("Ok");
     return;
   }
 
   Serial.println("Set vibration level.");
   analogWrite(VIBRATOR_PIN, MIN_VIBRATE + (vibrateValue * STEP_VAL));
-  server->send(200, "text/plain", "Ok");
+  ws.textAll("Ok");
   return;
 }
 
 void handleBatteryPercent() {
   Serial.println("Battery Percent Handler Invoked");
-  server->send(200, "text/plain", String(calculateBatteryPercent()));
+  ws.textAll(String(calculateBatteryPercent()));
 }
 
 void handleBatteryVoltage() {
   Serial.println("Battery Voltage Handler Invoked");
-  server->send(200, "text/plain", String(calculateBatteryVoltage()));
+  ws.textAll(String(calculateBatteryVoltage()));
 }
 
 void handleReset() {
-  server->send(200, "text/plain", "Ok");
+  Serial.println("Reset Handler Invoked");
+  ws.textAll("Ok");
   resetDevice();
 }
 
 void handleVersion() {
   Serial.println("Version Handler Invoked");
-  server->send(200, "text/plain", VERSION);
+  ws.textAll(VERSION);
 }
 
 void handleCopyright() {
   Serial.println("Copyright Handler Invoked");
-  server->send(200, "text/plain", "(C) 2025 SkyeCA - https://github.com/SkyeCA");
+  ws.textAll("(C) 2025 SkyeCA - https://github.com/SkyeCA");
 }
 
 void handleCat() {
   Serial.println("Cat Handler Invoked");
-  server->send(200, "text/plain", "Meow (=･ω･=)");
+  ws.textAll("Meow (=･ω･=)");
 }
 
 void handleDeviceId() {
   Serial.println("Device ID Handler Invoked");
-  server->send(200, "text/plain", deviceId);
+  ws.textAll(deviceId);
 }
 
 void handleCompatibility() {
   Serial.println("Handle Compatibility Invoked");
-  server->send(200, "text/plain", "HapticPuck3/nhd");
+  ws.textAll("HapticPuck3/nhdws");
+}
+
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
+  if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+    data[len] = 0;
+    String message = (char*)data;
+    // Check if the message is "getReadings"
+    if (strcmp((char*)data, "BAT_PCT") == 0) {
+      handleBatteryPercent();
+    }
+  }
+}
+
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+  switch (type) {
+    case WS_EVT_CONNECT:
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
+    case WS_EVT_DISCONNECT:
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
+    case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
+      break;
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+      break;
+  }
 }
 
 void setup() {
@@ -184,31 +208,21 @@ void setup() {
     Serial.println("Error setting up MDNS responder!");
     while (1) { delay(1000); }
   }
-  
-  Serial.println("Server Start");
-  server.reset(new ESP8266WebServer(WiFi.localIP(), NETWORK_PORT));
-  server->on("/", handleRoot);
-  server->on("/battery/percent", handleBatteryPercent);
-  server->on("/battery/voltage", handleBatteryVoltage);
-  server->on("/reset", handleReset);
-  server->on("/vibrate", handleVibrate);
-  server->on("/version", handleVersion);
-  server->on("/copyright", handleCopyright);
-  server->on("/compatibility", handleCompatibility);
-  server->on("/cat", handleCat);
-  server->on("/id", handleDeviceId);
-  server->onNotFound(handleNotFound);
-  server->begin();
+
+  // Setup Websocket
+  ws.onEvent(onEvent);
+  server.addHandler(&ws);
+  server.begin();
 
   // Add mDNS Service
   Serial.println("Add mDNS Service");
-  MDNS.addService("nhd", "tcp", NETWORK_PORT);
+  MDNS.addService("nhd", "ws", NETWORK_PORT);
 
   Serial.println("Ready!");
 }
 
 void loop() {
-  server->handleClient();
+  ws.cleanupClients();
   MDNS.update();
   updateBatteryState();
 }
